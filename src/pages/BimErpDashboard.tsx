@@ -7,7 +7,12 @@ import { Building, Users, ShoppingCart, Activity, AlertTriangle, BarChart3 } fro
 
 export default function BimErpDashboard() {
   const { user } = useAuth();
-
+  
+  const sampleBids = [
+    { id: "#001", project: "Project Alpha", value: "$10,000", status: "Pending" },
+    { id: "#002", project: "Project Beta", value: "$8,500", status: "Accepted" },
+  ];
+  
   // Role-specific dashboard stats
   const getRoleSpecificStats = () => {
     switch (user?.roles[0]) {
@@ -208,8 +213,38 @@ export default function BimErpDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] flex items-center justify-center border rounded-md">
-                <p className="text-muted-foreground">Interactive dashboard charts will appear here</p>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metric</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Total Users</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">124</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">150</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Active Projects</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">48</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">50</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Marketplace Volume</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$2.4M</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$2.5M</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Platform Uptime</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">98.2%</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
@@ -222,11 +257,30 @@ export default function BimErpDashboard() {
                 Recent bids, projects, and transactions
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-[300px] flex items-center justify-center border rounded-md">
-                <p className="text-muted-foreground">Marketplace analytics will appear here</p>
-              </div>
-            </CardContent>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bid ID</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {sampleBids.map((bid) => (
+                        <tr key={bid.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bid.id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bid.project}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bid.value}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bid.status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="crm" className="space-y-4">
@@ -238,8 +292,38 @@ export default function BimErpDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] flex items-center justify-center border rounded-md">
-                <p className="text-muted-foreground">CRM analytics will appear here</p>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metric</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Total Leads</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">120</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">150</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Conversion Rate</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">30%</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">35%</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Opportunities</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">45</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">50</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Win Rate</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">20%</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">25%</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
@@ -253,8 +337,38 @@ export default function BimErpDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] flex items-center justify-center border rounded-md">
-                <p className="text-muted-foreground">Structural analytics will appear here</p>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metric</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Inspections Completed</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">50</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">60</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Critical Issues</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Compliance Rate</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">95%</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maintenance Overdue</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
