@@ -26,11 +26,11 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#1D4ED8", // Main blue used in professional site
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#F9FAFB",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -61,6 +61,11 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+      },
+      fontSize: {
+        base: '1rem',
+        lg: '1.125rem',
+        xl: '1.25rem',
       },
       keyframes: {
         "accordion-down": {

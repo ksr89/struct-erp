@@ -6,7 +6,7 @@ const BimErpDashboard: React.FC = () => {
       <header className="py-6 px-4">
         <h1 className="text-4xl font-bold text-center">Welcome to BIM ERP Dashboard</h1>
       </header>
-      <main className="container mx-auto p-4">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <section className="bg-white text-gray-800 rounded-lg shadow-lg p-8 mb-6">
           <h2 className="text-2xl font-bold mb-4">Overview</h2>
           <p className="text-lg">

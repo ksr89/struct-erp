@@ -71,9 +71,9 @@ export function NaturalLanguageQuery() {
           value={query}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleQuery()}
-          className="flex-1"
+          className="flex-1 text-base"
         />
-        <Button onClick={handleQuery}>
+        <Button onClick={handleQuery} className="text-base">
           <Search className="w-4 h-4 mr-2" />
           Query
         </Button>

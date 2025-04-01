@@ -8,9 +8,9 @@ export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative py-20 overflow-hidden bg-white">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center gap-12">
+    <div className="relative py-16 overflow-hidden bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center gap-8">
           <div className="flex-1 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               BIM-Integrated ERP: Revolutionizing Construction Operations
@@ -19,10 +19,10 @@ export const HeroSection: React.FC = () => {
               Streamline your operations, boost efficiency, and make data-driven decisions with our intelligent ERP solution.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" className="gap-2" onClick={() => navigate("/login")}>
+              <Button size="lg" className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => navigate("/login")}>
                 Get Started <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate("/login")}>
+              <Button size="lg" variant="outline" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => navigate("/login")}>
                 Book a Demo
               </Button>
             </div>
