@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { useToast } from "../hooks/use-toast";
 import { Search } from "lucide-react";
+
+type NLQueryResult = 
+  | { name: string; sales: number }
+  | { month: string; revenue: number }
+  | { name: string; stock: number };
 
 // Sample data to demonstrate functionality
 const sampleData = {
@@ -27,7 +32,7 @@ const sampleData = {
 
 export function NaturalLanguageQuery() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<NLQueryResult[] | null>(null);
   const { toast } = useToast();
 
   const handleQuery = () => {
@@ -64,8 +69,8 @@ export function NaturalLanguageQuery() {
         <Input
           placeholder="Ask a question about your data..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleQuery()}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleQuery()}
           className="flex-1"
         />
         <Button onClick={handleQuery}>
@@ -78,13 +83,19 @@ export function NaturalLanguageQuery() {
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-3">Results</h3>
           <div className="space-y-2">
-            {results.map((item: any, index: number) => (
+            {results.map((item: NLQueryResult, index: number) => (
               <div key={index} className="flex justify-between p-2 bg-gray-50 rounded">
-                <span>{item.name || item.month}</span>
+                <span>
+                  {"name" in item ? item.name : "month" in item ? item.month : ""}
+                </span>
                 <span className="font-medium">
-                  {item.sales ? `${item.sales} sales` : 
-                   item.revenue ? `$${item.revenue}` :
-                   item.stock ? `${item.stock} in stock` : ''}
+                  {"sales" in item
+                    ? `${item.sales} sales`
+                    : "revenue" in item
+                    ? `$${item.revenue}`
+                    : "stock" in item
+                    ? `${item.stock} in stock`
+                    : ''}
                 </span>
               </div>
             ))}

@@ -1,22 +1,49 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { AlertCircle, FileUp, CheckCircle2 } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { useAuth } from "../../contexts/AuthContext";
+
+interface Material {
+  type: string;
+  grade: string;
+  location: string;
+}
+
+interface ComplianceTag {
+  code: string;
+  status: string;
+}
+
+interface Metadata {
+  fileName: string;
+  fileType: string;
+  fileSize: string;
+  uploadDate: string;
+  structureId: string;
+  dimensions: {
+    width: string;
+    length: string;
+    height: string;
+  };
+  materials: Material[];
+  complianceTags: ComplianceTag[];
+}
 
 interface BimModelUploaderProps {
-  onModelUploaded?: (modelData: any) => void;
+  onModelUploaded?: (modelData: Metadata) => void;
 }
 
 export function BimModelUploader({ onModelUploaded }: BimModelUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [fileType, setFileType] = useState<string>("ifc");
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
-  const [metadata, setMetadata] = useState<any>(null);
+  const [metadata, setMetadata] = useState<Metadata | null>(null);
   const [structureId, setStructureId] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +61,7 @@ export function BimModelUploader({ onModelUploaded }: BimModelUploaderProps) {
     // Simulate upload process
     setTimeout(() => {
       // Mock successful upload with metadata extraction
-      const mockMetadata = {
+      const mockMetadata: Metadata = {
         fileName: file.name,
         fileType: fileType,
         fileSize: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
@@ -89,7 +116,7 @@ export function BimModelUploader({ onModelUploaded }: BimModelUploaderProps) {
                   id="structure-id" 
                   placeholder="Enter existing structure ID or leave blank for new" 
                   value={structureId}
-                  onChange={(e) => setStructureId(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStructureId(e.target.value)}
                 />
               </div>
               
@@ -194,7 +221,7 @@ export function BimModelUploader({ onModelUploaded }: BimModelUploaderProps) {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {metadata.materials.map((material: any, index: number) => (
+                        {metadata.materials.map((material: Material, index: number) => (
                           <tr key={index}>
                             <td className="px-4 py-2 text-sm">{material.type}</td>
                             <td className="px-4 py-2 text-sm">{material.grade}</td>
@@ -209,7 +236,7 @@ export function BimModelUploader({ onModelUploaded }: BimModelUploaderProps) {
                 <div>
                   <h3 className="text-sm font-medium">Compliance Tags</h3>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {metadata.complianceTags.map((tag: any, index: number) => (
+                    {metadata.complianceTags.map((tag: ComplianceTag, index: number) => (
                       <div key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         {tag.code}: {tag.status}
                       </div>

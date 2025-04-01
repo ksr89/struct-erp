@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { UserRole, PERMISSIONS } from "../types/auth";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 
 // Mock data
 const dummyProjects = [
@@ -167,22 +167,43 @@ const Marketplace = () => {
         {canCreateProject && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Post New Project</Button>
+              <Button>Post New RFP</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>Post a New Construction Project</DialogTitle>
+                <DialogTitle>Post a New RFP</DialogTitle>
                 <DialogDescription>
                   Enter the details of your construction project to receive bids from qualified contractors.
                 </DialogDescription>
               </DialogHeader>
+              <div className="mb-4">
+                <Label className="mb-2">Select RFP Type</Label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex items-center space-x-1">
+                    <input type="radio" name="rfpType" value="Project" defaultChecked />
+                    <span>Project</span>
+                  </label>
+                  <label className="flex items-center space-x-1">
+                    <input type="radio" name="rfpType" value="Service" />
+                    <span>Service</span>
+                  </label>
+                  <label className="flex items-center space-x-1">
+                    <input type="radio" name="rfpType" value="Rental" />
+                    <span>Rental Trip</span>
+                  </label>
+                  <label className="flex items-center space-x-1">
+                    <input type="radio" name="rfpType" value="Parts" />
+                    <span>Parts/Supplies</span>
+                  </label>
+                </div>
+              </div>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
                   <Label htmlFor="title">Project Title</Label>
                   <Input 
                     id="title" 
                     value={newProject.title}
-                    onChange={(e) => setNewProject({...newProject, title: e.target.value})}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewProject({...newProject, title: e.target.value})}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -192,7 +213,7 @@ const Marketplace = () => {
                       id="budget" 
                       type="number"
                       value={newProject.budget}
-                      onChange={(e) => setNewProject({...newProject, budget: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewProject({...newProject, budget: e.target.value})}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -201,7 +222,7 @@ const Marketplace = () => {
                       id="deadline" 
                       type="date"
                       value={newProject.deadline}
-                      onChange={(e) => setNewProject({...newProject, deadline: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewProject({...newProject, deadline: e.target.value})}
                     />
                   </div>
                 </div>
@@ -210,7 +231,7 @@ const Marketplace = () => {
                   <Input 
                     id="location" 
                     value={newProject.location}
-                    onChange={(e) => setNewProject({...newProject, location: e.target.value})}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewProject({...newProject, location: e.target.value})}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -219,7 +240,7 @@ const Marketplace = () => {
                     id="description" 
                     rows={4}
                     value={newProject.description}
-                    onChange={(e) => setNewProject({...newProject, description: e.target.value})}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewProject({...newProject, description: e.target.value})}
                   />
                 </div>
               </div>
@@ -320,7 +341,7 @@ const Marketplace = () => {
       </Tabs>
 
       {/* Project Details Dialog */}
-      <Dialog open={!!selectedProject} onOpenChange={(open) => !open && setSelectedProject(null)}>
+      <Dialog open={!!selectedProject} onOpenChange={(open: boolean) => !open && setSelectedProject(null)}>
         <DialogContent className="sm:max-w-[700px]">
           {selectedProject && (
             <>
@@ -413,7 +434,7 @@ const Marketplace = () => {
                           type="number"
                           placeholder="Bid amount in USD"
                           value={bidAmount}
-                          onChange={(e) => setBidAmount(e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBidAmount(e.target.value)}
                         />
                       </div>
                       <Button 

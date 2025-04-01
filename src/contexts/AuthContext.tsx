@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (foundUser) {
       // Remove password before storing user
       const { password: _, ...userWithoutPassword } = foundUser;
-      const secureUser = userWithoutPassword as User;
+      const secureUser = { ...userWithoutPassword, isSuperAdmin: foundUser.email === "admin@example.com" } as User;
       
       setUser(secureUser);
       setIsAuthenticated(true);

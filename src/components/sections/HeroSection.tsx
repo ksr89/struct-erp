@@ -1,8 +1,10 @@
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 
-export function HeroSection() {
+import React from "react";
+
+export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
 
   return (
