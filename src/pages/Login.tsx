@@ -31,9 +31,19 @@ const Login: React.FC = () => {
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 flex flex-col items-center justify-center">
         <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-3xl shadow-2xl p-10 w-full max-w-md">
-          <h1 className="text-4xl font-extrabold text-center text-white mb-8">
-            Welcome Back
+          <h1 className="text-4xl font-extrabold text-center text-white mb-2">
+            Welcome to BIM ERP
           </h1>
+          <h2 className="text-xl text-center text-white mb-8">
+            Please log in to continue
+          </h2>
+          <div className="mb-6 p-4 bg-gray-100 rounded-md text-center">
+            <p className="text-gray-700 text-sm">
+              <strong>Demo Credentials:</strong>
+            </p>
+            <p className="text-gray-700 text-sm">Email: demo@bimerp.com</p>
+            <p className="text-gray-700 text-sm">Password: password123</p>
+          </div>
           {error && (
             <div className="mb-4 text-red-600 text-center">
               {error}
