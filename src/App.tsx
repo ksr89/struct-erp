@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import DashboardMarketplaceFeed from './components/DashboardMarketplaceFeed';
 import RfpCreateForm from './components/RfpCreateForm';
 import CrmKanbanView from './components/CrmKanbanView';
@@ -21,15 +21,13 @@ function App() {
   }
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<DashboardMarketplaceFeed />} />
-        <Route path="/createRfp" element={<RfpCreateForm />} />
-        <Route path="/crm" element={<CrmKanbanView />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={<DashboardMarketplaceFeed />} />
+      <Route path="/createRfp" element={<RfpCreateForm />} />
+      <Route path="/crm" element={<CrmKanbanView />} />
+    </Routes>
   );
 }
 

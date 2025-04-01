@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://salestracker.github.io/struct-erp/assets/landing-bg.jpg')",
+            "url('https://salestracker.github.io/struct-erp/assets/images/landing-bg.jpg')",
         }}
       ></div>
       <div className="absolute inset-0 bg-black opacity-50"></div>

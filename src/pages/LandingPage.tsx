@@ -5,7 +5,7 @@ const LandingPage: React.FC = () => {
   return (
     <div 
       className="min-h-screen flex flex-col justify-center items-center bg-cover bg-center"
-      style={{ backgroundImage: "url('https://salestracker.github.io/struct-erp/assets/professional-bg.jpg')" }}
+      style={{ backgroundImage: "url('https://salestracker.github.io/struct-erp/assets/images/landing-bg.jpg')" }}
     >
       <div className="bg-black bg-opacity-60 p-8 rounded-xl text-center">
         <h1 className="text-white text-5xl font-bold mb-4">SalesTracker ERP</h1>
