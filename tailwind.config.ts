@@ -66,6 +66,7 @@ export default {
         base: '1rem',
         lg: '1.125rem',
         xl: '1.25rem',
+        "5xl": "3rem",
       },
       keyframes: {
         "accordion-down": {
