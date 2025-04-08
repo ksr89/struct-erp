@@ -1,90 +1,102 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  roles: UserRole[];
-}
+// Role-based permissions system for BIM ERP
 
 export enum UserRole {
-  ADMIN = "Admin",
-  CONTRACTOR = "Contractor",
-  SUPPLIER = "Supplier",
-  CUSTOMER = "Customer",
-  FIELD_ENGINEER = "Field Engineer",
-  COMPLIANCE_OFFICER = "Compliance Officer"
+  ADMIN = "ADMIN",
+  CONTRACTOR = "CONTRACTOR", 
+  SUPPLIER = "SUPPLIER",
+  CLIENT = "CLIENT",
+  FIELD_AGENT = "FIELD_AGENT",
+  VIEWER = "VIEWER"
 }
 
-export enum PERMISSIONS {
+// Permission constants
+export const PERMISSIONS = {
   // Marketplace permissions
-  VIEW_MARKETPLACE = "view_marketplace",
-  CREATE_PROJECT = "create_project",
-  SUBMIT_BID = "submit_bid",
-  ACCEPT_BID = "accept_bid",
+  CREATE_PROJECT: "CREATE_PROJECT",
+  VIEW_PROJECTS: "VIEW_PROJECTS",
+  EDIT_PROJECT: "EDIT_PROJECT",
+  DELETE_PROJECT: "DELETE_PROJECT",
+  SUBMIT_BID: "SUBMIT_BID",
+  ACCEPT_BID: "ACCEPT_BID",
   
   // CRM permissions
-  VIEW_LEADS = "view_leads",
-  CREATE_LEAD = "create_lead",
-  VIEW_WORK_ORDERS = "view_work_orders",
-  CREATE_WORK_ORDER = "create_work_order",
+  VIEW_CRM: "VIEW_CRM",
+  MANAGE_LEADS: "MANAGE_LEADS",
   
-  // Structural Awareness permissions
-  VIEW_STRUCTURES = "view_structures",
-  REGISTER_STRUCTURE = "register_structure",
-  VIEW_SENSOR_DATA = "view_sensor_data",
-  ADD_SENSOR = "add_sensor",
-  GENERATE_COMPLIANCE_REPORT = "generate_compliance_report",
+  // Structural awareness permissions
+  VIEW_STRUCTURES: "VIEW_STRUCTURES",
+  VIEW_SENSOR_DATA: "VIEW_SENSOR_DATA",
+  VIEW_BIM_MODELS: "VIEW_BIM_MODELS",
+  UPLOAD_BIM_MODEL: "UPLOAD_BIM_MODEL",
+  EDIT_STRUCTURE: "EDIT_STRUCTURE",
   
-  // BIM Integration permissions
-  UPLOAD_BIM_MODEL = "upload_bim_model",
-  VIEW_BIM_MODELS = "view_bim_models"
-}
+  // User management
+  MANAGE_USERS: "MANAGE_USERS"
+};
 
-// Define which roles have which permissions
+// Role-based permission mapping
 export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   [UserRole.ADMIN]: Object.values(PERMISSIONS),
   
   [UserRole.CONTRACTOR]: [
-    PERMISSIONS.VIEW_MARKETPLACE,
     PERMISSIONS.CREATE_PROJECT,
+    PERMISSIONS.VIEW_PROJECTS,
+    PERMISSIONS.EDIT_PROJECT,
+    PERMISSIONS.DELETE_PROJECT,
     PERMISSIONS.ACCEPT_BID,
-    PERMISSIONS.VIEW_LEADS,
-    PERMISSIONS.VIEW_WORK_ORDERS,
+    PERMISSIONS.VIEW_CRM,
+    PERMISSIONS.MANAGE_LEADS,
     PERMISSIONS.VIEW_STRUCTURES,
     PERMISSIONS.VIEW_SENSOR_DATA,
-    PERMISSIONS.VIEW_BIM_MODELS
+    PERMISSIONS.VIEW_BIM_MODELS,
   ],
   
   [UserRole.SUPPLIER]: [
-    PERMISSIONS.VIEW_MARKETPLACE,
+    PERMISSIONS.VIEW_PROJECTS,
     PERMISSIONS.SUBMIT_BID,
-    PERMISSIONS.VIEW_WORK_ORDERS,
-    PERMISSIONS.VIEW_STRUCTURES
-  ],
-  
-  [UserRole.CUSTOMER]: [
-    PERMISSIONS.VIEW_MARKETPLACE,
-    PERMISSIONS.CREATE_PROJECT,
-    PERMISSIONS.ACCEPT_BID,
+    PERMISSIONS.VIEW_CRM,
     PERMISSIONS.VIEW_STRUCTURES,
     PERMISSIONS.VIEW_SENSOR_DATA
   ],
   
-  [UserRole.FIELD_ENGINEER]: [
-    PERMISSIONS.VIEW_WORK_ORDERS,
-    PERMISSIONS.CREATE_WORK_ORDER,
+  [UserRole.CLIENT]: [
+    PERMISSIONS.CREATE_PROJECT,
+    PERMISSIONS.VIEW_PROJECTS,
+    PERMISSIONS.EDIT_PROJECT,
+    PERMISSIONS.DELETE_PROJECT,
+    PERMISSIONS.ACCEPT_BID,
+    PERMISSIONS.VIEW_CRM,
+    PERMISSIONS.VIEW_STRUCTURES,
+    PERMISSIONS.VIEW_BIM_MODELS,
+  ],
+  
+  [UserRole.FIELD_AGENT]: [
+    PERMISSIONS.VIEW_PROJECTS,
     PERMISSIONS.VIEW_STRUCTURES,
     PERMISSIONS.VIEW_SENSOR_DATA,
-    PERMISSIONS.ADD_SENSOR,
     PERMISSIONS.VIEW_BIM_MODELS,
     PERMISSIONS.UPLOAD_BIM_MODEL
   ],
   
-  [UserRole.COMPLIANCE_OFFICER]: [
-    PERMISSIONS.VIEW_STRUCTURES,
-    PERMISSIONS.VIEW_SENSOR_DATA,
-    PERMISSIONS.REGISTER_STRUCTURE,
-    PERMISSIONS.GENERATE_COMPLIANCE_REPORT,
-    PERMISSIONS.VIEW_BIM_MODELS,
-    PERMISSIONS.UPLOAD_BIM_MODEL
+  [UserRole.VIEWER]: [
+    PERMISSIONS.VIEW_PROJECTS,
+    PERMISSIONS.VIEW_STRUCTURES
   ]
 };
+
+// User interface
+export interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  roles: UserRole[];
+}
+
+// Authentication context interface
+export interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  hasPermission: (permission: string) => boolean;
+}

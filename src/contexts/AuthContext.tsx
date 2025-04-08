@@ -1,167 +1,165 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserRole, ROLE_PERMISSIONS } from '../types/auth';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User, UserRole, ROLE_PERMISSIONS, AuthContextType } from '../types/auth';
 
-// Mock users for demonstration
-const MOCK_USERS = [
-  {
-    id: '1',
-    email: 'admin@example.com',
+// Create the context with a default value
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  login: async () => {},
+  logout: () => {},
+  hasPermission: () => false,
+});
+
+// Mock users for the demo
+const MOCK_USERS: Record<string, { password: string; user: User }> = {
+  'demo@bimerp.com': {
+    password: 'password123',
+    user: {
+      id: '0',
+      name: 'Demo User',
+      email: 'demo@bimerp.com',
+      roles: [UserRole.ADMIN, UserRole.CONTRACTOR],
+    },
+  },
+  'admin@bim-erp.com': {
     password: 'admin123',
-    name: 'Admin User',
-    roles: [UserRole.ADMIN],
+    user: {
+      id: '1',
+      name: 'Admin User',
+      email: 'admin@bim-erp.com',
+      roles: [UserRole.ADMIN],
+    },
   },
-  {
-    id: '2',
-    email: 'contractor@example.com',
+  'contractor@bim-erp.com': {
     password: 'contractor123',
-    name: 'John Contractor',
-    roles: [UserRole.CONTRACTOR],
+    user: {
+      id: '2',
+      name: 'John Builder',
+      email: 'contractor@bim-erp.com',
+      roles: [UserRole.CONTRACTOR],
+    },
   },
-  {
-    id: '3',
-    email: 'supplier@example.com',
+  'supplier@bim-erp.com': {
     password: 'supplier123',
-    name: 'Sarah Supplier',
-    roles: [UserRole.SUPPLIER],
+    user: {
+      id: '3',
+      name: 'Sarah Supplies',
+      email: 'supplier@bim-erp.com',
+      roles: [UserRole.SUPPLIER],
+    },
   },
-  {
-    id: '4',
-    email: 'customer@example.com',
-    password: 'customer123',
-    name: 'Customer Corp',
-    roles: [UserRole.CUSTOMER],
+  'client@bim-erp.com': {
+    password: 'client123',
+    user: {
+      id: '4',
+      name: 'Client Corp',
+      email: 'client@bim-erp.com',
+      roles: [UserRole.CLIENT],
+    },
   },
-  {
-    id: '5',
-    email: 'engineer@example.com',
-    password: 'engineer123',
-    name: 'Engineer Team',
-    roles: [UserRole.FIELD_ENGINEER],
+  'field@bim-erp.com': {
+    password: 'field123',
+    user: {
+      id: '5',
+      name: 'Field Agent',
+      email: 'field@bim-erp.com',
+      roles: [UserRole.FIELD_AGENT],
+    },
   },
-  {
-    id: '6',
-    email: 'compliance@example.com',
-    password: 'compliance123',
-    name: 'Compliance Officer',
-    roles: [UserRole.COMPLIANCE_OFFICER],
+  'viewer@bim-erp.com': {
+    password: 'viewer123',
+    user: {
+      id: '6',
+      name: 'Viewer Only',
+      email: 'viewer@bim-erp.com',
+      roles: [UserRole.VIEWER],
+    },
   },
-];
+};
 
-interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
-  hasPermission: (permission: string) => boolean;
-  hasRole: (role: UserRole) => boolean;
-  isAuthenticated: boolean;
+// Provider component
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Check for existing session on mount
+  // Check for saved auth token on component mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('bim_erp_user');
-    if (storedUser) {
+    const savedUser = localStorage.getItem('bim_erp_user');
+    if (savedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser);
+        const parsedUser = JSON.parse(savedUser) as User;
         setUser(parsedUser);
         setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Failed to parse stored user:', error);
+      } catch (err) {
+        console.error('Failed to parse saved user:', err);
         localStorage.removeItem('bim_erp_user');
       }
     }
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  // Mock login function
+  const login = async (email: string, password: string): Promise<void> => {
     // In a real app, this would be an API call
-    const foundUser = MOCK_USERS.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (foundUser) {
-      // Remove password before storing user
-      const { password: _, ...userWithoutPassword } = foundUser;
-      const secureUser = { ...userWithoutPassword, isSuperAdmin: foundUser.email === "admin@example.com" } as User;
-      
-      setUser(secureUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('bim_erp_user', JSON.stringify(secureUser));
-      return true;
-    }
-    
-    return false;
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const userRecord = MOCK_USERS[email.toLowerCase()];
+        
+        if (userRecord && userRecord.password === password) {
+          setUser(userRecord.user);
+          setIsAuthenticated(true);
+          localStorage.setItem('bim_erp_user', JSON.stringify(userRecord.user));
+          resolve();
+        } else {
+          reject(new Error('Invalid email or password'));
+        }
+      }, 500); // Simulate API delay
+    });
   };
 
-  const logout = () => {
+  // Logout function
+  const logout = (): void => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('bim_erp_user');
   };
 
-  const hasRole = (role: UserRole): boolean => {
-    if (!user) return false;
-    return user.roles.includes(role);
-  };
-
+  // Check if user has a specific permission
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
     
-    // Check if any of the user's roles have the required permission
-    return user.roles.some(role => {
+    // Check each role the user has
+    for (const role of user.roles) {
       const permissions = ROLE_PERMISSIONS[role];
-      return permissions && permissions.includes(permission);
-    });
+      if (permissions.includes(permission)) {
+        return true;
+      }
+    }
+    
+    return false;
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        hasPermission,
-        hasRole,
-        isAuthenticated,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const authValue: AuthContextType = {
+    user,
+    isAuthenticated,
+    login,
+    logout,
+    hasPermission,
+  };
+
+  return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
 };
 
+// Custom hook to use the auth context
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
-// Protected route component
-export const ProtectedRoute: React.FC<{
-  children: React.ReactNode;
-  requiredPermission?: string;
-  requiredRole?: UserRole;
-  fallback?: React.ReactNode;
-}> = ({ children, requiredPermission, requiredRole, fallback }) => {
-  const { isAuthenticated, hasPermission, hasRole } = useAuth();
-
-  if (!isAuthenticated) {
-    return fallback ? <>{fallback}</> : null;
-  }
-
-  if (requiredPermission && !hasPermission(requiredPermission)) {
-    return fallback ? <>{fallback}</> : null;
-  }
-
-  if (requiredRole && !hasRole(requiredRole)) {
-    return fallback ? <>{fallback}</> : null;
-  }
-
-  return <>{children}</>;
-};
+export default AuthContext;

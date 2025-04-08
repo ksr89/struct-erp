@@ -1,19 +1,20 @@
 import React, { useState } from "react";
+import DashboardLayout from "../components/layout/DashboardLayout";
 import { useAuth } from "../contexts/AuthContext";
 import { UserRole, PERMISSIONS } from "../types/auth";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { PlusCircle, Search, Filter, MoreHorizontal, AlertTriangle, Activity, Building, Download, FileText, FileUp } from "lucide-react";
-import { BimModelUploader } from "@/components/bim/BimModelUploader";
-import { BimModelViewer } from "@/components/bim/BimModelViewer";
+import { BimModelUploader } from "../components/bim/BimModelUploader";
+import { BimModelViewer } from "../components/bim/BimModelViewer";
 
 // Mock data
 const dummyStructures = [
@@ -117,17 +118,18 @@ const StructuralAwareness = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Structural Awareness System</h1>
-          <p className="text-muted-foreground">
-            Monitor building health, compliance, and warranty status
-          </p>
+    <DashboardLayout>
+      <div className="container mx-auto p-6">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Structural Awareness System</h1>
+            <p className="text-muted-foreground">
+              Monitor building health, compliance, and warranty status
+            </p>
+          </div>
         </div>
-      </div>
 
-      <Tabs defaultValue="dashboard" className="mb-6">
+        <Tabs defaultValue="dashboard" className="mb-6">
         <TabsList>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="structures">Structures</TabsTrigger>
@@ -499,7 +501,8 @@ const StructuralAwareness = () => {
           )}
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

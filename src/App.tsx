@@ -1,32 +1,57 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import DashboardMarketplaceFeed from './components/DashboardMarketplaceFeed';
-import RfpCreateForm from './components/RfpCreateForm';
-import CrmKanbanView from './components/CrmKanbanView';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
-import Login from './pages/Login';
 import LandingPage from './pages/LandingPage';
+import Login from './pages/Login';
+import BimErpDashboard from './pages/BimErpDashboard';
+import Marketplace from './pages/Marketplace';
+import CRM from './pages/CRM';
+import StructuralAwareness from './pages/StructuralAwareness';
+import NotFound from './pages/NotFound';
 import './index.css';
 
-type ViewType = 'dashboard' | 'createRfp' | 'crm';
+// Protected route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  
+  return <>{children}</>;
+};
 
 function App() {
-  const { isAuthenticated } = useAuth();
-  const [activeView, setActiveView] = useState<ViewType>('dashboard');
-  const [selectedRole, setSelectedRole] = useState<string>('Builder');
-
-  // If user is not authenticated, render Login page
-  if (!isAuthenticated) {
-    return <Login />;
-  }
-
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<DashboardMarketplaceFeed />} />
-      <Route path="/createRfp" element={<RfpCreateForm />} />
-      <Route path="/crm" element={<CrmKanbanView />} />
+      
+      {/* Protected routes */}
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <BimErpDashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/marketplace" element={
+        <ProtectedRoute>
+          <Marketplace />
+        </ProtectedRoute>
+      } />
+      <Route path="/crm" element={
+        <ProtectedRoute>
+          <CRM />
+        </ProtectedRoute>
+      } />
+      <Route path="/structural-awareness" element={
+        <ProtectedRoute>
+          <StructuralAwareness />
+        </ProtectedRoute>
+      } />
+      
+      {/* 404 page */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
