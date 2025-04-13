@@ -108,6 +108,8 @@ const CRM: React.FC = () => {
   const [projects, setProjects] = useState<CrmProject[]>(initialProjects);
   const [columns, setColumns] = useState<Record<ColumnId, CrmProject[]>>({} as Record<ColumnId, CrmProject[]>);
   const [selectedProject, setSelectedProject] = useState<CrmProject | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editProject, setEditProject] = useState<CrmProject | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newProject, setNewProject] = useState<Partial<CrmProject>>({
     title: '',
@@ -378,7 +380,11 @@ const CRM: React.FC = () => {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                               className="bg-white p-3 rounded-md shadow border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
-                              onClick={() => setSelectedProject(project)}
+                              onClick={() => {
+                                setSelectedProject(project);
+                                setIsEditMode(false);
+                                setEditProject(null);
+                              }}
                             >
                               <div className="flex justify-between items-start mb-2">
                                 <h4 className="font-medium text-gray-900">{project.title}</h4>
@@ -421,11 +427,16 @@ const CRM: React.FC = () => {
         
         {/* Project Details Dialog */}
         {selectedProject && (
-          <Dialog open={!!selectedProject} onOpenChange={(open) => !open && setSelectedProject(null)}>
+          <Dialog open={!!selectedProject} onOpenChange={(open) => { if (!open) { setSelectedProject(null); setIsEditMode(false); setEditProject(null); } }}>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle className="flex items-center justify-between">
                   <span>{selectedProject.title}</span>
+                  {!isEditMode && (
+                    <Button size="sm" variant="outline" onClick={() => { setIsEditMode(true); setEditProject(selectedProject); }}>
+                      Edit
+                    </Button>
+                  )}
                   <div className={`text-xs px-2 py-1 rounded-full ${
                     selectedProject.type === 'POSTED_RFP' 
                       ? 'bg-blue-100 text-blue-800' 
@@ -435,65 +446,136 @@ const CRM: React.FC = () => {
                   </div>
                 </DialogTitle>
               </DialogHeader>
-              <div className="py-4">
-                <div className="mb-4 pb-4 border-b">
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Status</h3>
-                  <div className="flex items-center">
-                    <div className={`px-2 py-1 rounded-md text-sm ${
-                      selectedProject.status.includes('Open') || selectedProject.status.includes('Pending')
-                        ? 'bg-blue-100 text-blue-800'
-                        : selectedProject.status.includes('Progress') || selectedProject.status.includes('Awarded')
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : selectedProject.status.includes('Completed') || selectedProject.status.includes('Done')
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {selectedProject.status}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b">
-                  {selectedProject.client && (
-                    <div>
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Client</h3>
-                      <p className="text-sm">{selectedProject.client}</p>
-                    </div>
-                  )}
-                  {selectedProject.budget && (
-                    <div>
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Budget</h3>
-                      <p className="text-sm">{selectedProject.budget}</p>
-                    </div>
-                  )}
-                </div>
-                
-                {selectedProject.deadline && (
+              
+              {!isEditMode ? (
+                <div className="py-4">
                   <div className="mb-4 pb-4 border-b">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Deadline</h3>
-                    <div className="flex items-center text-sm">
-                      <CalendarClock className="h-4 w-4 mr-1 text-gray-400" />
-                      {new Date(selectedProject.deadline).toLocaleDateString()}
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Status</h3>
+                    <div className="flex items-center">
+                      <div className={`px-2 py-1 rounded-md text-sm ${
+                        selectedProject.status.includes('Open') || selectedProject.status.includes('Pending')
+                          ? 'bg-blue-100 text-blue-800'
+                          : selectedProject.status.includes('Progress') || selectedProject.status.includes('Awarded')
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : selectedProject.status.includes('Completed') || selectedProject.status.includes('Done')
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {selectedProject.status}
+                      </div>
                     </div>
                   </div>
-                )}
-                
-                {selectedProject.description && (
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Description</h3>
-                    <p className="text-sm">{selectedProject.description}</p>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b">
+                    {selectedProject.client && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500 mb-1">Client</h3>
+                        <p className="text-sm">{selectedProject.client}</p>
+                      </div>
+                    )}
+                    {selectedProject.budget && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500 mb-1">Budget</h3>
+                        <p className="text-sm">{selectedProject.budget}</p>
+                      </div>
+                    )}
                   </div>
-                )}
-                
-                <div className="flex items-center mt-4 pt-4 border-t">
-                  <div className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                    {selectedProject.type === 'POSTED_RFP' 
-                      ? `RFP ID: ${selectedProject.rfpId}`
-                      : `Bid ID: ${selectedProject.bidId}`
-                    }
+                  
+                  {selectedProject.deadline && (
+                    <div className="mb-4 pb-4 border-b">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Deadline</h3>
+                      <div className="flex items-center text-sm">
+                        <CalendarClock className="h-4 w-4 mr-1 text-gray-400" />
+                        {new Date(selectedProject.deadline).toLocaleDateString()}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {selectedProject.description && (
+                    <div className="mb-4">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Description</h3>
+                      <p className="text-sm">{selectedProject.description}</p>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center mt-4 pt-4 border-t">
+                    <div className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                      {selectedProject.type === 'POSTED_RFP' 
+                        ? `RFP ID: ${selectedProject.rfpId}`
+                        : `Bid ID: ${selectedProject.bidId}`
+                      }
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="py-4">
+                  <div className="grid gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="edit-title">Project Title</Label>
+                      <Input 
+                        id="edit-title" 
+                        value={editProject?.title || ''} 
+                        onChange={(e) => setEditProject(editProject ? { ...editProject, title: e.target.value } : null)} 
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="edit-description">Description</Label>
+                      <Textarea 
+                        id="edit-description" 
+                        value={editProject?.description || ''} 
+                        onChange={(e) => setEditProject(editProject ? { ...editProject, description: e.target.value } : null)} 
+                        rows={3}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="edit-client">Client</Label>
+                        <Input 
+                          id="edit-client" 
+                          value={editProject?.client || ''} 
+                          onChange={(e) => setEditProject(editProject ? { ...editProject, client: e.target.value } : null)} 
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="edit-budget">Budget</Label>
+                        <Input 
+                          id="edit-budget" 
+                          value={editProject?.budget || ''} 
+                          onChange={(e) => setEditProject(editProject ? { ...editProject, budget: e.target.value } : null)} 
+                        />
+                      </div>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="edit-deadline">Deadline</Label>
+                      <Input 
+                        id="edit-deadline" 
+                        type="date"
+                        value={editProject?.deadline || ''} 
+                        onChange={(e) => setEditProject(editProject ? { ...editProject, deadline: e.target.value } : null)} 
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {isEditMode && (
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => { setIsEditMode(false); setEditProject(null); }}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => {
+                    if(editProject) {
+                      setProjects(projects.map(p => p.id === editProject.id ? editProject : p));
+                      setSelectedProject(editProject);
+                      setIsEditMode(false);
+                      setEditProject(null);
+                      toast({title: "Project Updated", description: `${editProject.title} has been updated`});
+                    }
+                  }}>
+                    Save Changes
+                  </Button>
+                </DialogFooter>
+              )}
             </DialogContent>
           </Dialog>
         )}

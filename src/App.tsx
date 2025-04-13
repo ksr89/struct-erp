@@ -8,16 +8,17 @@ import Marketplace from './pages/Marketplace';
 import CRM from './pages/CRM';
 import StructuralAwareness from './pages/StructuralAwareness';
 import NotFound from './pages/NotFound';
+import Settings from './pages/Settings';
 import './index.css';
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useAuth();
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
-  
+
   return <>{children}</>;
 };
 
@@ -27,7 +28,7 @@ function App() {
       {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
-      
+
       {/* Protected routes */}
       <Route path="/dashboard" element={
         <ProtectedRoute>
@@ -49,7 +50,10 @@ function App() {
           <StructuralAwareness />
         </ProtectedRoute>
       } />
-      
+
+      {/* Route for Settings page */}
+      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+
       {/* 404 page */}
       <Route path="*" element={<NotFound />} />
     </Routes>

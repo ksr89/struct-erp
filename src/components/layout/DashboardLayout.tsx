@@ -87,7 +87,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               {user?.name?.[0] || 'U'}
             </div>
             <div>
-              <p className="font-medium">{user?.name || 'User'}</p>
+              <p className="font-medium">{user?.name || 'User'} {user?.roles && <span className="text-sm text-gray-500">({Array.isArray(user.roles) ? user.roles.join(", ") : user.roles})</span>}</p>
               <p className="text-xs text-gray-500">{user?.email || 'user@example.com'}</p>
             </div>
           </div>
